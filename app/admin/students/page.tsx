@@ -31,7 +31,7 @@ export default function StudentsPage() {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  async function fetchData() {
     try {
       const [sRes, bRes] = await Promise.all([
         fetch("/api/students"),
@@ -49,7 +49,7 @@ export default function StudentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();

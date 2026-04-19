@@ -49,7 +49,7 @@ export default function ScannerPage() {
     };
   }, [selectedClass]);
 
-  const handleQrScan = async (qrCode: string) => {
+  async function handleQrScan(qrCode: string) {
     setScannedStudent(null);
     setErrorMsg("");
     try {
@@ -64,7 +64,7 @@ export default function ScannerPage() {
     } catch (e: any) {
       setErrorMsg(e.message);
     }
-  };
+  }
 
   const submitAttendance = async () => {
     if (!scannedStudent || !selectedClass) return;

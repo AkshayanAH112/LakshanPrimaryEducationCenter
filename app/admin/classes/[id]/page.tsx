@@ -16,7 +16,7 @@ export default function ClassAttendancePage() {
     fetchClassData();
   }, [classId]);
 
-  const fetchClassData = async () => {
+  async function fetchClassData() {
     try {
       const res = await fetch(`/api/classes/${classId}`);
       const d = await res.json();
@@ -26,7 +26,7 @@ export default function ClassAttendancePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const toggleAttendance = async (studentId: string, currentPresent: boolean, currentPaid: boolean, field: 'present' | 'paid') => {
     const isPresent = field === 'present' ? !currentPresent : currentPresent;
