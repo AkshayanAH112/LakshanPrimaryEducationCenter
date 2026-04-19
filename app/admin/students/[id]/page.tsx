@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
-import { Loader2, ArrowLeft, CheckCircle2, AlertTriangle } from "lucide-react";
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { Loader2, ArrowLeft, AlertTriangle } from "lucide-react";
 
 export default function StudentProfilePage() {
   const params = useParams();

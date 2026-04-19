@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { Loader2, AlertTriangle, CheckCircle, Search, Save } from "lucide-react";
+import { Loader2, AlertTriangle, Search, Save } from "lucide-react";
 
 export default function ScannerPage() {
   const [classes, setClasses] = useState<any[]>([]);
@@ -26,6 +26,23 @@ export default function ScannerPage() {
     });
   }, []);
 
+  const handleQrScan = useCallback(async (qrCode: string) => {
+    setScannedStudent(null);
+    setErrorMsg("");
+    try {
+      const res = await fetch(`/api/students/lookup?qrCode=${qrCode}&classId=${selectedClass}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setScannedStudent(data.student);
+      setUnpaidCount(data.unpaidCount);
+      setIsPresent(true); // Default to present on scan
+      setIsPaid(data.existingRecord?.paid || false);
+    } catch (e: any) {
+      setErrorMsg(e.message);
+    }
+  }, [selectedClass]);
+
   useEffect(() => {
     if (!selectedClass) return;
 
@@ -41,30 +58,13 @@ export default function ScannerPage() {
         handleQrScan(decodedText);
         // Optional: pause scanner scanner.pause()
       },
-      (error) => { /* ignore normal errors */ }
+      (_error) => { /* ignore normal errors */ }
     );
 
     return () => {
       scanner.clear().catch(e => console.error(e));
     };
-  }, [selectedClass]);
-
-  async function handleQrScan(qrCode: string) {
-    setScannedStudent(null);
-    setErrorMsg("");
-    try {
-      const res = await fetch(`/api/students/lookup?qrCode=${qrCode}&classId=${selectedClass}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      setScannedStudent(data.student);
-      setUnpaidCount(data.unpaidCount);
-      setIsPresent(true); // Default to present on scan
-      setIsPaid(data.existingRecord?.paid || false);
-    } catch (e: any) {
-      setErrorMsg(e.message);
-    }
-  }
+  }, [selectedClass, handleQrScan]);
 
   const submitAttendance = async () => {
     if (!scannedStudent || !selectedClass) return;

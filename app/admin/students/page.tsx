@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import QRCode from "qrcode";
 import { Plus, Search, Loader2, QrCode as QrIcon } from "lucide-react";
 
@@ -241,7 +242,7 @@ export default function StudentsPage() {
               
               <div className="flex-1 flex flex-col justify-center z-10 w-full h-full relative">
                 <div className="flex items-center gap-2 mb-2">
-                  <img src="/logo.png" className="w-8 h-8 object-contain" alt="Logo" />
+                  <Image src="/logo.png" width={32} height={32} className="w-8 h-8 object-contain" alt="Logo" />
                   <div className="text-[10px] font-bold text-indigo-900 leading-[1.1]">Lakshan Primary<br/>Education Center</div>
                 </div>
                 
@@ -255,7 +256,7 @@ export default function StudentsPage() {
               </div>
 
               <div className="w-24 shrink-0 flex flex-col items-center z-10">
-                <img src={activeQr} alt="QR Code" className="w-full h-auto bg-white border-2 border-gray-100 rounded-lg p-1 shadow-sm" />
+                <Image src={activeQr} alt="QR Code" width={96} height={96} unoptimized className="w-full h-auto bg-white border-2 border-gray-100 rounded-lg p-1 shadow-sm" />
                 <p className="text-[7px] text-gray-400 font-mono mt-1 tracking-tighter">{activeStudent.qrCode}</p>
               </div>
             </div>

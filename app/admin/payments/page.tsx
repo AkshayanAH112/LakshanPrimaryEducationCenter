@@ -1,6 +1,6 @@
 "use client";
 
-import { Send, AlertTriangle, Search } from "lucide-react";
+import { AlertTriangle, Search } from "lucide-react";
 
 export default function PaymentsPage() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, CheckCircle2, XCircle, Search } from "lucide-react";
 
@@ -12,11 +12,7 @@ export default function ClassAttendancePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    fetchClassData();
-  }, [classId]);
-
-  async function fetchClassData() {
+  const fetchClassData = useCallback(async () => {
     try {
       const res = await fetch(`/api/classes/${classId}`);
       const d = await res.json();
@@ -26,7 +22,11 @@ export default function ClassAttendancePage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [classId]);
+
+  useEffect(() => {
+    fetchClassData();
+  }, [fetchClassData]);
 
   const toggleAttendance = async (studentId: string, currentPresent: boolean, currentPaid: boolean, field: 'present' | 'paid') => {
     const isPresent = field === 'present' ? !currentPresent : currentPresent;
