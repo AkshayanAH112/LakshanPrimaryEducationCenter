@@ -79,11 +79,11 @@ export default function ClassAttendancePage() {
           <p className="text-gray-500 mt-1">{new Date(classSession.date).toDateString()} at {classSession.time || 'N/A'}</p>
         </div>
         <div className="flex gap-4">
-          <div className="bg-indigo-50 dark:bg-indigo-900/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-[100px]">
+          <div className="bg-indigo-50 dark:bg-indigo-900/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-25">
             <span className="text-2xl font-bold text-indigo-600">{presentCount}<span className="text-sm font-normal text-indigo-400">/{roster.length}</span></span>
             <span className="text-xs font-bold text-indigo-800 dark:text-indigo-300 uppercase mt-1">Present</span>
           </div>
-          <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-[100px]">
+          <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-25">
              <span className="text-2xl font-bold text-green-600">{paidCount}</span>
              <span className="text-xs font-bold text-green-800 dark:text-green-300 uppercase mt-1">Paid</span>
           </div>

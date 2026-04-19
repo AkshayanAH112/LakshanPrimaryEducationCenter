@@ -203,7 +203,7 @@ export default function StudentsPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date of Birth</label>
-                <input type="date" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-transparent dark:[color-scheme:dark]" value={formData.dateOfBirth} onChange={e => setFormData({...formData, dateOfBirth: e.target.value})} />
+                <input type="date" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-transparent dark:scheme-dark" value={formData.dateOfBirth} onChange={e => setFormData({...formData, dateOfBirth: e.target.value})} />
               </div>
               <div className="flex gap-3 pt-4">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl font-medium">Cancel</button>
@@ -226,7 +226,7 @@ export default function StudentsPage() {
             }
           `}} />
           
-          <div className="bg-white rounded-3xl p-8 max-w-[400px] w-full shadow-2xl flex flex-col items-center print:shadow-none print:p-0 print:m-0" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-3xl p-8 max-w-100 w-full shadow-2xl flex flex-col items-center print:shadow-none print:p-0 print:m-0" onClick={e => e.stopPropagation()}>
             
             <div className="flex justify-between w-full mb-6 print:hidden items-center">
               <h3 className="text-xl font-bold text-gray-900">Student ID Card</h3>
