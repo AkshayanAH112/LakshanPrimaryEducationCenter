@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { Loader2, AlertTriangle, Search, Save } from "lucide-react";
 
@@ -18,6 +18,7 @@ export default function ScannerPage() {
 
   // Manual fallback via ID
   const [manualCode, setManualCode] = useState("");
+  const lastScannedCode = useRef<string | null>(null);
 
   useEffect(() => {
     fetch("/api/classes").then(r => r.json()).then(d => {
@@ -27,6 +28,9 @@ export default function ScannerPage() {
   }, []);
 
   const handleQrScan = useCallback(async (qrCode: string) => {
+    if (lastScannedCode.current === qrCode) return;
+    lastScannedCode.current = qrCode;
+
     setScannedStudent(null);
     setErrorMsg("");
     try {
@@ -82,6 +86,7 @@ export default function ScannerPage() {
       });
       if (res.ok) {
         setScannedStudent(null);
+        lastScannedCode.current = null;
         setErrorMsg("Attendance Saved Successfully!");
         setTimeout(() => setErrorMsg(""), 3000);
       }
@@ -134,6 +139,40 @@ export default function ScannerPage() {
         {/* Camera Scanner View */}
         <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
           <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Live Camera Feed</h3>
+          <style>{`
+            #qr-reader button {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 8px 18px;
+              border-radius: 10px;
+              font-weight: 600;
+              font-size: 14px;
+              cursor: pointer;
+              border: none;
+              transition: background 0.2s, transform 0.1s;
+            }
+            #qr-reader button:active { transform: scale(0.97); }
+            #qr-reader__scan_region + #qr-reader__dashboard button,
+            #qr-reader__dashboard_section_csr button,
+            #qr-reader__dashboard_section_fsr button {
+              background: #4f46e5;
+              color: #fff;
+              margin: 4px 4px;
+            }
+            #qr-reader__dashboard_section_csr button:hover,
+            #qr-reader__dashboard_section_fsr button:hover {
+              background: #4338ca;
+            }
+            #qr-reader__status_span { font-size: 13px; color: #6b7280; }
+            #qr-reader select {
+              padding: 6px 10px;
+              border-radius: 8px;
+              border: 1px solid #d1d5db;
+              font-size: 14px;
+              margin: 4px 0;
+            }
+          `}</style>
           {!selectedClass ? (
             <div className="text-center p-12 text-gray-500">Please select a class session first.</div>
           ) : (

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import QRCode from "qrcode";
-import { Plus, Search, Loader2, QrCode as QrIcon } from "lucide-react";
+import { Plus, Search, Loader2, QrCode as QrIcon, Download } from "lucide-react";
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<any[]>([]);
@@ -79,6 +79,17 @@ export default function StudentsPage() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const downloadIdCard = async () => {
+    const html2canvas = (await import('html2canvas')).default;
+    const card = document.getElementById('printable-id-card');
+    if (!card) return;
+    const canvas = await html2canvas(card, { scale: 4, useCORS: true, backgroundColor: '#ffffff' });
+    const link = document.createElement('a');
+    link.download = `${activeStudent?.name?.replace(/\s+/g, '_')}_ID_Card.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
   };
 
   const filteredStudents = students.filter(s => 
@@ -230,7 +241,10 @@ export default function StudentsPage() {
             
             <div className="flex justify-between w-full mb-6 print:hidden items-center">
               <h3 className="text-xl font-bold text-gray-900">Student ID Card</h3>
-              <button className="text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-100 transition-colors" onClick={() => window.print()}>Print Card</button>
+              <div className="flex gap-2">
+                <button className="text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-100 transition-colors" onClick={() => window.print()}>Print Card</button>
+                <button className="flex items-center gap-1.5 text-white bg-indigo-600 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition-colors" onClick={downloadIdCard}><Download size={15}/>Download</button>
+              </div>
             </div>
             
             {/* Standard CR-80 Financial Card Size (85.6mm x 53.98mm) */}
