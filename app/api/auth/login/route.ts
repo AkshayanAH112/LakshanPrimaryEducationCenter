@@ -20,7 +20,9 @@ export async function POST(request: Request) {
 
     const token = signToken({ userId: user._id, role: user.role });
 
-    const response = NextResponse.json({ success: true });
+    // Token is also returned in the body for the mobile app (Capacitor),
+    // which authenticates with an Authorization: Bearer header instead of cookies.
+    const response = NextResponse.json({ success: true, token });
     response.cookies.set({
       name: 'auth_token',
       value: token,
