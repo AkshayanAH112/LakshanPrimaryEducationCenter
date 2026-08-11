@@ -20,7 +20,7 @@ export default function BatchDetailsPage() {
       });
   }, [batchId]);
 
-  if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-indigo-600" size={40} /></div>;
+  if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" size={40} /></div>;
   if (!data?.batch) return <div className="p-12 text-center text-gray-500">Batch not found</div>;
 
   const { batch, classes } = data;
@@ -37,11 +37,11 @@ export default function BatchDetailsPage() {
         <ArrowLeft size={20} /> Back to Batches
       </button>
 
-      <div className="bg-indigo-600 p-8 rounded-3xl text-white shadow-lg relative overflow-hidden">
+      <div className="bg-primary p-8 rounded-3xl text-white shadow-lg relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-12 translate-x-12"></div>
         <div className="relative z-10">
           <h1 className="text-3xl font-bold">{batch.name}</h1>
-          <p className="text-indigo-200 mt-2 text-lg">Year: {batch.year}</p>
+          <p className="text-primary-foreground/80 mt-2 text-lg">Year: {batch.year}</p>
         </div>
       </div>
 
@@ -49,7 +49,7 @@ export default function BatchDetailsPage() {
         {batch.grades.map((grade: number) => (
           <div key={grade} className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 shadow-sm">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-              <span className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 w-10 h-10 rounded-xl flex items-center justify-center">G{grade}</span>
+              <span className="bg-primary/10 dark:bg-primary/15 text-primary w-10 h-10 rounded-xl flex items-center justify-center">G{grade}</span>
               Grade {grade} Classes
             </h2>
             
@@ -58,16 +58,16 @@ export default function BatchDetailsPage() {
                 <div 
                   key={c._id}
                   onClick={() => router.push(`/admin/classes/${c._id}`)}
-                  className="p-5 border border-gray-200 dark:border-gray-800 rounded-2xl cursor-pointer hover:border-indigo-500 hover:shadow-md transition-all group"
+                  className="p-5 border border-gray-200 dark:border-gray-800 rounded-2xl cursor-pointer hover:border-primary hover:shadow-md transition-all group"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <span className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs font-bold font-mono">
                       Rs. {c.paymentAmount}
                     </span>
-                    <ArrowLeft size={16} className="rotate-135 text-gray-300 group-hover:text-indigo-500 transition-colors" />
+                    <ArrowLeft size={16} className="rotate-135 text-gray-300 group-hover:text-primary transition-colors" />
                   </div>
                   <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <FileText size={16} className="text-indigo-500" />
+                    <FileText size={16} className="text-primary" />
                     {c.subject || 'General Session'}
                   </h3>
                   <div className="mt-3 text-sm text-gray-500 flex items-center gap-2">

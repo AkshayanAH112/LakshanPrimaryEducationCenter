@@ -91,24 +91,24 @@ export default function MarksPage() {
 
         <div className="grid sm:grid-cols-2 gap-6 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 mb-8">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Grade</label>
-            <select className="w-full px-4 py-2 border rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white" value={grade} onChange={e => setGrade(e.target.value)}>
+            <label className="field-label">Target Grade</label>
+            <select className="field" value={grade} onChange={e => setGrade(e.target.value)}>
               <option value="3">Grade 3</option>
               <option value="4">Grade 4</option>
               <option value="5">Grade 5</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Exam Date</label>
-            <input type="date" required className="w-full px-4 py-2 border rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:[color-scheme:dark]" value={examDate} onChange={e => setExamDate(e.target.value)} />
+            <label className="field-label">Exam Date</label>
+            <input type="date" required className="field" value={examDate} onChange={e => setExamDate(e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
-            <input type="text" placeholder="e.g. Mathematics" className="w-full px-4 py-2 border rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white" value={subject} onChange={e => setSubject(e.target.value)} />
+            <label className="field-label">Subject</label>
+            <input type="text" placeholder="e.g. Mathematics" className="field" value={subject} onChange={e => setSubject(e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Maximum Marks</label>
-            <input type="number" min="1" className="w-full px-4 py-2 border rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white" value={maxMarks} onChange={e => setMaxMarks(Number(e.target.value))} />
+            <label className="field-label">Maximum Marks</label>
+            <input type="number" min="1" className="field" value={maxMarks} onChange={e => setMaxMarks(Number(e.target.value))} />
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export default function MarksPage() {
           <button 
             onClick={handleDownloadTemplate}
             disabled={loading}
-            className="flex-1 border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+            className="flex-1 border-2 border-primary text-primary hover:bg-primary/10 dark:hover:bg-primary/15 font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" /> : <><Download size={20} /> 1. Download Template</>}
           </button>
@@ -130,7 +130,7 @@ export default function MarksPage() {
               onChange={handleFileUpload}
               disabled={loading || !subject || !examDate}
             />
-            <div className={`w-full h-full font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors ${!subject || !examDate ? 'bg-gray-300 text-gray-500' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
+            <div className={`w-full h-full font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors ${!subject || !examDate ? 'bg-gray-300 text-gray-500' : 'bg-primary text-primary-foreground hover:bg-primary/90'}`}>
               {loading ? <Loader2 className="animate-spin" /> : <><Upload size={20} /> 2. Upload Filled Template</>}
             </div>
           </div>

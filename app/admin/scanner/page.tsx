@@ -102,9 +102,9 @@ export default function ScannerPage() {
         
         <div className="flex flex-col sm:flex-row gap-4 mb-2">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Active Class Session</label>
+            <label className="field-label">Active Class Session</label>
             <select
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 dark:text-white"
+              className="field"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
             >
@@ -116,11 +116,11 @@ export default function ScannerPage() {
           </div>
           
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Manual Override</label>
+            <label className="field-label">Manual Override</label>
             <div className="flex gap-2">
               <input 
                 type="text" 
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl dark:bg-gray-800" 
+                className="field" 
                 placeholder="Enter QR Data Manually"
                 value={manualCode}
                 onChange={e => setManualCode(e.target.value)}
@@ -200,7 +200,7 @@ export default function ScannerPage() {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h2 className="text-2xl font-bold dark:text-white">{scannedStudent.name}</h2>
-                  <p className="text-indigo-600 dark:text-indigo-400 font-medium">Grade {scannedStudent.grade}</p>
+                  <p className="text-primary font-medium">Grade {scannedStudent.grade}</p>
                   <p className="text-sm text-gray-500 mt-1">Guardian: {scannedStudent.guardianName} ({scannedStudent.guardianPhone})</p>
                 </div>
                 {unpaidCount > 0 && (
@@ -215,7 +215,7 @@ export default function ScannerPage() {
                   <span className="font-medium dark:text-white">Mark Present?</span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" checked={isPresent} onChange={() => setIsPresent(!isPresent)} />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                    <div className="w-11 h-6 bg-input peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
                   </label>
                 </div>
 
@@ -226,7 +226,7 @@ export default function ScannerPage() {
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" checked={isPaid} onChange={() => setIsPaid(!isPaid)} />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                    <div className="w-11 h-6 bg-input peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
               </div>
@@ -234,7 +234,7 @@ export default function ScannerPage() {
               <button 
                 onClick={submitAttendance}
                 disabled={submitting}
-                className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 flex items-center justify-center gap-2 text-white py-4 rounded-xl font-bold shadow-lg transition-transform active:scale-95"
+                className="w-full mt-6 bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 text-primary-foreground py-4 rounded-xl font-bold shadow-lg transition-transform active:scale-95"
               >
                 {submitting ? <Loader2 className="animate-spin" /> : <><Save size={24} /> Confirm & Save</>}
               </button>

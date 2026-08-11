@@ -106,7 +106,7 @@ export default function StudentsPage() {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium"
         >
           <Plus size={20} /> Register Student
         </button>
@@ -118,13 +118,13 @@ export default function StudentsPage() {
           <input 
             type="text" 
             placeholder="Search students by name..." 
-            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100"
+            className="field pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <select 
-          className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-48 text-gray-700 dark:text-gray-300"
+          className="field sm:w-48"
           value={filterBatch}
           onChange={(e) => setFilterBatch(e.target.value)}
         >
@@ -161,7 +161,7 @@ export default function StudentsPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
                         <span className="font-bold text-gray-900 dark:text-gray-100">{sys.batchId?.name || 'No Batch'}</span>
-                        <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-2 py-1 rounded-md text-xs w-fit">Grade {sys.grade}</span>
+                        <span className="bg-primary/10 dark:bg-primary/15 text-primary px-2 py-1 rounded-md text-xs w-fit">Grade {sys.grade}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">{sys.guardianName}</td>
@@ -169,7 +169,7 @@ export default function StudentsPage() {
                     <td className="px-6 py-4">
                       <button 
                         onClick={(e) => { e.stopPropagation(); showQrCode(sys); }}
-                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-lg transition-colors"
+                        className="text-primary hover:text-primary/80 font-medium flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-lg transition-colors"
                       >
                         <QrIcon size={16} /> Get ID
                       </button>
@@ -191,21 +191,21 @@ export default function StudentsPage() {
           <div className="bg-white dark:bg-gray-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-gray-100 dark:border-gray-800 shadow-2xl">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Register New Student</h3>
             <form onSubmit={handleCreate} className="space-y-4">
-              <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label><input required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-transparent" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
-              <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Guardian Name</label><input required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-transparent" value={formData.guardianName} onChange={e => setFormData({...formData, guardianName: e.target.value})} /></div>
-              <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Guardian Phone (SMS)</label><input required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-transparent" placeholder="e.g. +94771234567" value={formData.guardianPhone} onChange={e => setFormData({...formData, guardianPhone: e.target.value})} /></div>
+              <div><label className="field-label">Full Name</label><input required className="field" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
+              <div><label className="field-label">Guardian Name</label><input required className="field" value={formData.guardianName} onChange={e => setFormData({...formData, guardianName: e.target.value})} /></div>
+              <div><label className="field-label">Guardian Phone (SMS)</label><input required className="field" placeholder="e.g. +94771234567" value={formData.guardianPhone} onChange={e => setFormData({...formData, guardianPhone: e.target.value})} /></div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Batch</label>
-                  <select required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white" value={formData.batchId} onChange={e => setFormData({...formData, batchId: e.target.value})}>
+                  <label className="field-label">Batch</label>
+                  <select required className="field" value={formData.batchId} onChange={e => setFormData({...formData, batchId: e.target.value})}>
                     {batches.map(b => (
                       <option key={b._id} value={b._id}>{b.name} ({b.year})</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Grade</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white" value={formData.grade} onChange={e => setFormData({...formData, grade: e.target.value})}>
+                  <label className="field-label">Current Grade</label>
+                  <select className="field" value={formData.grade} onChange={e => setFormData({...formData, grade: e.target.value})}>
                     <option value="3">Grade 3</option>
                     <option value="4">Grade 4</option>
                     <option value="5">Grade 5</option>
@@ -213,12 +213,12 @@ export default function StudentsPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date of Birth</label>
-                <input type="date" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-transparent dark:scheme-dark" value={formData.dateOfBirth} onChange={e => setFormData({...formData, dateOfBirth: e.target.value})} />
+                <label className="field-label">Date of Birth</label>
+                <input type="date" required className="field" value={formData.dateOfBirth} onChange={e => setFormData({...formData, dateOfBirth: e.target.value})} />
               </div>
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl font-medium">Cancel</button>
-                <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium">Create & Generate QR</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 border border-border bg-card rounded-xl font-medium text-foreground hover:bg-muted transition-colors">Cancel</button>
+                <button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium">Create & Generate QR</button>
               </div>
             </form>
           </div>
@@ -242,26 +242,26 @@ export default function StudentsPage() {
             <div className="flex justify-between w-full mb-6 print:hidden items-center">
               <h3 className="text-xl font-bold text-gray-900">Student ID Card</h3>
               <div className="flex gap-2">
-                <button className="text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-100 transition-colors" onClick={() => window.print()}>Print Card</button>
-                <button className="flex items-center gap-1.5 text-white bg-indigo-600 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition-colors" onClick={downloadIdCard}><Download size={15}/>Download</button>
+                <button className="text-primary bg-primary/10 px-3 py-1.5 rounded-lg font-bold hover:bg-primary/10 transition-colors" onClick={() => window.print()}>Print Card</button>
+                <button className="flex items-center gap-1.5 text-white bg-primary px-3 py-1.5 rounded-lg font-bold hover:bg-primary/90 transition-colors" onClick={downloadIdCard}><Download size={15}/>Download</button>
               </div>
             </div>
             
             {/* Standard CR-80 Financial Card Size (85.6mm x 53.98mm) */}
-            <div id="printable-id-card" className="w-[85.6mm] h-[53.98mm] bg-white border-[3px] border-indigo-600 rounded-xl flex flex-row items-center p-4 gap-4 relative overflow-hidden shrink-0">
+            <div id="printable-id-card" className="w-[85.6mm] h-[53.98mm] bg-white border-[3px] border-teal-600 rounded-xl flex flex-row items-center p-4 gap-4 relative overflow-hidden shrink-0">
               
               {/* Decorative Geometric Background */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-full -translate-y-8 translate-x-8"></div>
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-indigo-600/5 rounded-full translate-y-8 -translate-x-4"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-8 translate-x-8"></div>
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-primary/5 rounded-full translate-y-8 -translate-x-4"></div>
               
               <div className="flex-1 flex flex-col justify-center z-10 w-full h-full relative">
                 <div className="flex items-center gap-2 mb-2">
                   <Image src="/logo.png" width={32} height={32} className="w-8 h-8 object-contain" alt="Logo" />
-                  <div className="text-[10px] font-bold text-indigo-900 leading-[1.1]">Lakshan Primary<br/>Education Center</div>
+                  <div className="text-[10px] font-bold text-teal-900 leading-[1.1]">Lakshan Primary<br/>Education Center</div>
                 </div>
                 
                 <h4 className="font-bold text-gray-900 text-[13px] leading-tight uppercase mt-3 line-clamp-2">{activeStudent.name}</h4>
-                <p className="text-[10px] font-extrabold text-indigo-600 mt-1">{activeStudent.batchId?.name || 'Standard Batch'}</p>
+                <p className="text-[10px] font-extrabold text-primary mt-1">{activeStudent.batchId?.name || 'Standard Batch'}</p>
                 
                 <div className="mt-auto text-[9px] text-gray-600 space-y-0.5">
                   <p><span className="font-semibold">Grade:</span> {activeStudent.grade}</p>

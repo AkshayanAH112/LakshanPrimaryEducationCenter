@@ -62,7 +62,7 @@ export default function BatchesPage() {
         </div>
         <div className="flex gap-3">
           <button onClick={() => setIsBatchModalOpen(true)} className="px-4 py-2 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl font-medium transition-colors">New Batch</button>
-          <button onClick={() => setIsClassModalOpen(true)} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium transition-colors flex items-center gap-2"><Plus size={18}/> New Session</button>
+          <button onClick={() => setIsClassModalOpen(true)} className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors flex items-center gap-2"><Plus size={18}/> New Session</button>
         </div>
       </div>
 
@@ -75,13 +75,13 @@ export default function BatchesPage() {
               <div 
                 key={v._id} 
                 onClick={() => router.push(`/admin/batches/${v._id}`)}
-                className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-indigo-500 cursor-pointer transition-colors flex justify-between items-center group"
+                className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary cursor-pointer transition-colors flex justify-between items-center group"
               >
                 <div>
                   <div className="font-bold text-gray-900 dark:text-white">{v.name} ({v.year})</div>
                   <div className="text-sm text-gray-500 mt-1">Grades supported: {v.grades.join(', ')}</div>
                 </div>
-                <ChevronRight className="text-gray-400 group-hover:text-indigo-500 transition-colors" />
+                <ChevronRight className="text-gray-400 group-hover:text-primary transition-colors" />
               </div>
             ))}
           </div>
@@ -97,7 +97,7 @@ export default function BatchesPage() {
                   <div className="font-bold dark:text-white">Grade {v.grade} - {v.subject || 'General'}</div>
                   <div className="text-sm text-gray-500 flex items-center gap-1 mt-1"><Calendar size={14}/> {new Date(v.date).toLocaleDateString()} at {v.time}</div>
                 </div>
-                <div className="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-lg">Rs. {v.paymentAmount}</div>
+                <div className="text-primary font-bold bg-primary/10 dark:bg-primary/15 px-3 py-1 rounded-lg">Rs. {v.paymentAmount}</div>
               </div>
             ))}
           </div>
@@ -111,16 +111,16 @@ export default function BatchesPage() {
             <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">New Batch</h2>
             <form onSubmit={createBatch} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Batch Name</label>
-                <input required className="w-full border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-xl bg-transparent text-gray-900 dark:text-white" placeholder="e.g. 2025 Scholarship Batch" onChange={e => setBatchForm({...batchForm, name: e.target.value})} />
+                <label className="field-label">Batch Name</label>
+                <input required className="field" placeholder="e.g. 2025 Scholarship Batch" onChange={e => setBatchForm({...batchForm, name: e.target.value})} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Starting Year</label>
-                <input type="number" required className="w-full border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-xl bg-transparent text-gray-900 dark:text-white" placeholder="Year" value={batchForm.year} onChange={e => setBatchForm({...batchForm, year: Number(e.target.value)})} />
+                <label className="field-label">Starting Year</label>
+                <input type="number" required className="field" placeholder="Year" value={batchForm.year} onChange={e => setBatchForm({...batchForm, year: Number(e.target.value)})} />
               </div>
               <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => setIsBatchModalOpen(false)} className="flex-1 py-2 border border-gray-300 dark:border-gray-700 rounded-xl font-medium text-gray-900 dark:text-white">Cancel</button>
-                <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-medium">Create</button>
+                <button type="button" onClick={() => setIsBatchModalOpen(false)} className="flex-1 py-2 border border-border bg-card rounded-xl font-medium text-foreground hover:bg-muted transition-colors">Cancel</button>
+                <button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-xl font-medium">Create</button>
               </div>
             </form>
           </div>
@@ -133,41 +133,41 @@ export default function BatchesPage() {
             <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">New Class Session</h2>
             <form onSubmit={createClass} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Batch</label>
-                <select className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-2 rounded-xl" required onChange={e => setClassForm({...classForm, batchId: e.target.value})} value={classForm.batchId}>
+                <label className="field-label">Batch</label>
+                <select className="field" required onChange={e => setClassForm({...classForm, batchId: e.target.value})} value={classForm.batchId}>
                   {batches.map(b => <option key={b._id} value={b._id}>{b.name}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Grade</label>
-                  <select className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-2 rounded-xl" required onChange={e => setClassForm({...classForm, grade: e.target.value})}>
+                  <label className="field-label">Grade</label>
+                  <select className="field" required onChange={e => setClassForm({...classForm, grade: e.target.value})}>
                     <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount</label>
-                  <input type="number" required className="w-full border border-gray-300 dark:border-gray-700 py-2 px-4 rounded-xl bg-transparent text-gray-900 dark:text-white" placeholder="Payment Amount" value={classForm.paymentAmount} onChange={e => setClassForm({...classForm, paymentAmount: Number(e.target.value)})} />
+                  <label className="field-label">Amount</label>
+                  <input type="number" required className="field" placeholder="Payment Amount" value={classForm.paymentAmount} onChange={e => setClassForm({...classForm, paymentAmount: Number(e.target.value)})} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                  <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
-                  <input type="date" required className="w-full border border-gray-300 dark:border-gray-700 py-2 px-4 rounded-xl bg-transparent dark:[color-scheme:dark] text-gray-900 dark:text-white" onChange={e => setClassForm({...classForm, date: e.target.value})} />
+                  <label className="field-label">Date</label>
+                  <input type="date" required className="field" onChange={e => setClassForm({...classForm, date: e.target.value})} />
                 </div>
                  <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
-                  <input type="time" className="w-full border border-gray-300 dark:border-gray-700 py-2 px-4 rounded-xl bg-transparent dark:[color-scheme:dark] text-gray-900 dark:text-white" onChange={e => setClassForm({...classForm, time: e.target.value})} />
+                  <label className="field-label">Time</label>
+                  <input type="time" className="field" onChange={e => setClassForm({...classForm, time: e.target.value})} />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
-                <input type="text" className="w-full border border-gray-300 dark:border-gray-700 py-2 px-4 rounded-xl bg-transparent text-gray-900 dark:text-white" placeholder="Optional e.g. Mathematics" onChange={e => setClassForm({...classForm, subject: e.target.value})} />
+                <label className="field-label">Subject</label>
+                <input type="text" className="field" placeholder="Optional e.g. Mathematics" onChange={e => setClassForm({...classForm, subject: e.target.value})} />
               </div>
               
               <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => setIsClassModalOpen(false)} className="flex-1 py-2 border border-gray-300 dark:border-gray-700 rounded-xl font-medium text-gray-900 dark:text-white">Cancel</button>
-                <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-medium">Create</button>
+                <button type="button" onClick={() => setIsClassModalOpen(false)} className="flex-1 py-2 border border-border bg-card rounded-xl font-medium text-foreground hover:bg-muted transition-colors">Cancel</button>
+                <button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-xl font-medium">Create</button>
               </div>
             </form>
           </div>

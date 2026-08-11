@@ -5,8 +5,9 @@ import { Users, CreditCard, CalendarCheck, GraduationCap } from "lucide-react";
 
 interface Stats {
   totalStudents: number;
-  pendingPayments: number;
+  totalPendingAmount: number;
   todayAttendance: string;
+  hasClassesToday: boolean;
   recentMarks: number;
 }
 
@@ -26,7 +27,7 @@ const statConfig = [
     bg: "bg-green-50 dark:bg-green-900/20",
   },
   {
-    key: "pendingPayments" as keyof Stats,
+    key: "totalPendingAmount" as keyof Stats,
     title: "Pending Payments",
     icon: CreditCard,
     color: "text-orange-600 dark:text-orange-400",
@@ -90,7 +91,13 @@ export default function DashboardPage() {
               <div className="h-9 w-16 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
             ) : (
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                {stats ? String(stats[key]) : "—"}
+                {!stats
+                  ? "—"
+                  : key === "todayAttendance" && !stats.hasClassesToday
+                  ? "No classes"
+                  : key === "totalPendingAmount"
+                  ? `Rs. ${stats.totalPendingAmount}`
+                  : String(stats[key])}
               </p>
             )}
           </div>

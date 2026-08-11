@@ -54,7 +54,7 @@ export default function ClassAttendancePage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-indigo-600" size={40} /></div>;
+  if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" size={40} /></div>;
   if (!data?.classSession) return <div className="p-12 text-center text-gray-500">Class not found</div>;
 
   const { classSession, roster } = data;
@@ -72,16 +72,16 @@ export default function ClassAttendancePage() {
 
       <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 md:p-8 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold px-3 py-1 rounded-full text-xs mb-3 inline-block">
+          <span className="bg-primary/10 dark:bg-primary/15 text-primary font-bold px-3 py-1 rounded-full text-xs mb-3 inline-block">
             Grade {classSession.grade}
           </span>
           <h1 className="text-2xl md:text-3xl font-bold dark:text-white">{classSession.subject || 'General Session'}</h1>
           <p className="text-gray-500 mt-1">{new Date(classSession.date).toDateString()} at {classSession.time || 'N/A'}</p>
         </div>
         <div className="flex gap-4">
-          <div className="bg-indigo-50 dark:bg-indigo-900/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-25">
-            <span className="text-2xl font-bold text-indigo-600">{presentCount}<span className="text-sm font-normal text-indigo-400">/{roster.length}</span></span>
-            <span className="text-xs font-bold text-indigo-800 dark:text-indigo-300 uppercase mt-1">Present</span>
+          <div className="bg-primary/10 dark:bg-primary/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-25">
+            <span className="text-2xl font-bold text-primary">{presentCount}<span className="text-sm font-normal text-primary/60">/{roster.length}</span></span>
+            <span className="text-xs font-bold text-primary uppercase mt-1">Present</span>
           </div>
           <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-2xl flex flex-col items-center justify-center min-w-25">
              <span className="text-2xl font-bold text-green-600">{paidCount}</span>
@@ -96,7 +96,7 @@ export default function ClassAttendancePage() {
            <input 
              type="text" 
              placeholder="Search roster..." 
-             className="w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border-none rounded-xl outline-none text-gray-900 dark:text-white"
+             className="field pl-12"
              value={searchQuery}
              onChange={e => setSearchQuery(e.target.value)}
            />
@@ -122,7 +122,7 @@ export default function ClassAttendancePage() {
                       onClick={() => toggleAttendance(r.student._id, r.isPresent, r.isPaid, 'present')}
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all ${
                         r.isPresent 
-                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                          ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' 
                           : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                       }`}
                     >

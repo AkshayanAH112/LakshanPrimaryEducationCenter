@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import { Student, Attendance, Payment, Marks } from '@/models';
+import { computeBalance } from '@/lib/payments';
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
@@ -22,7 +23,11 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const attendancePercentage = totalClasses > 0 ? Math.round((classesPresent / totalClasses) * 100) : 0;
     
     const unpaidCount = attendance.filter(a => !a.paid && a.present).length;
-    
+
+    const totalOwed = attendance
+      .filter(a => a.present && a.classId)
+      .reduce((sum, a: any) => sum + computeBalance(a.classId.paymentAmount, a.paidAmount), 0);
+
     let totalMarks = 0, totalMax = 0;
     marks.forEach(m => { totalMarks += m.marks; totalMax += m.maxMarks; });
     const averageMarks = totalMax > 0 ? Math.round((totalMarks / totalMax) * 100) : 0;
@@ -35,6 +40,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       analytics: {
         attendancePercentage,
         unpaidCount,
+        totalOwed,
         averageMarks,
       }
     });

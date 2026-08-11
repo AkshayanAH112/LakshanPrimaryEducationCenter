@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,50 +40,49 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
-      <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-800">
-        <div className="flex justify-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="max-w-md w-full bg-card rounded-2xl shadow-xl shadow-primary/5 p-8 border border-border">
+        <div className="flex justify-center mb-6">
           <Image src="/logo.png" alt="Lakshan Primary Education Center" width={100} height={100} className="object-contain" />
         </div>
-        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2">Admin Login</h2>
-        <p className="text-sm text-center text-gray-500 mb-8">Sign in to manage Lakshan Primary Education Center</p>
-        
+        <h2 className="text-2xl text-center text-card-foreground mb-2">Admin Login</h2>
+        <p className="text-sm text-center text-muted-foreground mb-8">Sign in to manage Lakshan Primary Education Center</p>
+
         {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm text-center">
+          <div role="alert" className="mb-4 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-center text-destructive">
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:text-white transition-colors"
+              autoComplete="email"
               placeholder="admin@lakshan.edu"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:text-white transition-colors"
+              autoComplete="current-password"
               placeholder="••••••••"
             />
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition-colors disabled:opacity-50"
-          >
+          <Button type="submit" disabled={loading} className="w-full h-11 text-base font-semibold">
+            {loading && <Loader2 className="size-4 animate-spin" data-icon="inline-start" />}
             {loading ? "Signing in..." : "Sign in to Dashboard"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

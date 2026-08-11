@@ -15,7 +15,7 @@ export default function LandingPage() {
             </div>
             <Link 
               href="/login" 
-              className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-full transition-all"
+              className="px-5 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-full transition-all"
             >
               Admin Login
             </Link>
@@ -26,12 +26,12 @@ export default function LandingPage() {
       {/* Hero Section */}
       <main className="pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-medium text-sm mb-8">
-            <span className="flex h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/15 text-primary font-medium text-sm mb-8">
+            <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
             Enrollment Open for Grade 3, 4, 5
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8">
-            The Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400">Primary Education</span>
+            The Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Primary Education</span>
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400 mb-10">
             A state-of-the-art educational environment for young minds. We combine focused learning with modern infrastructure to help your child excel.
@@ -45,24 +45,24 @@ export default function LandingPage() {
 
           {/* Features Grid */}
           <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left hover:border-primary/50 transition-colors">
+              <div className="w-12 h-12 bg-primary/10 dark:bg-primary/15 rounded-2xl flex items-center justify-center text-primary mb-6">
                 <QrCode size={24} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">QR Attendance</h3>
               <p className="text-gray-500 dark:text-gray-400">Lightning fast, contactless classroom check-ins using physical student ID cards.</p>
             </div>
             
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left hover:border-primary/50 transition-colors">
+              <div className="w-12 h-12 bg-primary/10 dark:bg-primary/15 rounded-2xl flex items-center justify-center text-primary mb-6">
                 <MessageSquare size={24} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Instant SMS Alerts</h3>
               <p className="text-gray-500 dark:text-gray-400">Automated payment reminders and exam mark updates delivered straight to parent phones.</p>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left hover:border-primary/50 transition-colors">
+              <div className="w-12 h-12 bg-primary/10 dark:bg-primary/15 rounded-2xl flex items-center justify-center text-primary mb-6">
                 <LineChart size={24} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Marks Management</h3>

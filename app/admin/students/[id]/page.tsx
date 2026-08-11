@@ -19,7 +19,7 @@ export default function StudentProfilePage() {
     });
   }, [studentId]);
 
-  if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-indigo-600" size={40} /></div>;
+  if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" size={40} /></div>;
   if (!data?.student) return <div className="p-12 text-center">Student not found</div>;
 
   const { student, analytics, marks, attendance } = data;
@@ -38,13 +38,13 @@ export default function StudentProfilePage() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Profile Card */}
         <div className="lg:col-span-1 bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-24 bg-indigo-600"></div>
+          <div className="absolute top-0 left-0 w-full h-24 bg-primary"></div>
           <div className="relative mt-8 flex flex-col items-center">
             <div className="w-24 h-24 bg-white dark:bg-gray-800 rounded-full border-4 border-white dark:border-gray-900 flex items-center justify-center shadow-lg mb-4">
-              <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{student.name.charAt(0)}</span>
+              <span className="text-3xl font-bold text-primary">{student.name.charAt(0)}</span>
             </div>
             <h2 className="text-2xl font-bold dark:text-white">{student.name}</h2>
-            <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold px-3 py-1 rounded-full text-sm mt-2">Grade {student.grade}</span>
+            <span className="bg-primary/10 dark:bg-primary/15 text-primary font-bold px-3 py-1 rounded-full text-sm mt-2">Grade {student.grade}</span>
             
             <div className="w-full mt-8 space-y-4">
               <div className="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-2">
@@ -76,7 +76,7 @@ export default function StudentProfilePage() {
           <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col justify-center">
             <h3 className="text-gray-500 font-medium mb-2">Unpaid Sessions</h3>
             <div className="flex items-center gap-3">
-              <span className={`text-4xl font-bold ${analytics.unpaidCount > 0 ? 'text-red-500' : 'text-indigo-600'}`}>{analytics.unpaidCount} Days</span>
+              <span className={`text-4xl font-bold ${analytics.unpaidCount > 0 ? 'text-red-500' : 'text-primary'}`}>{analytics.unpaidCount} Days</span>
               {analytics.unpaidCount > 0 && <AlertTriangle className="text-red-500" size={32} />}
             </div>
             {analytics.unpaidCount >= 3 && <p className="text-sm text-red-500 mt-2 font-medium">SMS reminders actived!</p>}
