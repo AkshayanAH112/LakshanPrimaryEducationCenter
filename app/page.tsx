@@ -31,7 +31,7 @@ export default function LandingPage() {
             Enrollment Open for Grade 3, 4, 5
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8">
-            The Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Primary Education</span>
+            The Future of <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary/70">Primary Education</span>
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400 mb-10">
             A state-of-the-art educational environment for young minds. We combine focused learning with modern infrastructure to help your child excel.
