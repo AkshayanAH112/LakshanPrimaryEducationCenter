@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import QRCode from "qrcode";
-import { Plus, Search, Loader2, QrCode as QrIcon, Download } from "lucide-react";
+import { Plus, Search, Loader2, QrCode as QrIcon, Download, IdCard } from "lucide-react";
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<any[]>([]);
@@ -16,11 +16,31 @@ export default function StudentsPage() {
   const [activeStudent, setActiveStudent] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterBatch, setFilterBatch] = useState("");
+  const [backfilling, setBackfilling] = useState(false);
+  const [backfillError, setBackfillError] = useState<string | null>(null);
   const router = useRouter();
+
+  // One-time migration for students registered before student IDs existed.
+  const backfillIds = async () => {
+    setBackfilling(true);
+    setBackfillError(null);
+    try {
+      const res = await fetch("/api/students/backfill-registration-numbers", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setBackfillError(data.error || "Could not assign student IDs");
+        return;
+      }
+      await fetchData();
+    } finally {
+      setBackfilling(false);
+    }
+  };
   
   // Form state
   const [formData, setFormData] = useState({
     name: "",
+    school: "",
     guardianName: "",
     guardianPhone: "",
     batchId: "",
@@ -62,7 +82,7 @@ export default function StudentsPage() {
       });
       if (res.ok) {
         setIsModalOpen(false);
-        setFormData({ name: "", guardianName: "", guardianPhone: "", batchId: batches[0]?._id || "", grade: "3", dateOfBirth: "" });
+        setFormData({ name: "", school: "", guardianName: "", guardianPhone: "", batchId: batches[0]?._id || "", grade: "3", dateOfBirth: "" });
         fetchData();
       }
     } catch (e) {
@@ -82,7 +102,7 @@ export default function StudentsPage() {
   };
 
   const downloadIdCard = async () => {
-    const html2canvas = (await import('html2canvas')).default;
+    const html2canvas = (await import('html2canvas-pro')).default;
     const card = document.getElementById('printable-id-card');
     if (!card) return;
     const canvas = await html2canvas(card, { scale: 4, useCORS: true, backgroundColor: '#ffffff' });
@@ -104,13 +124,33 @@ export default function StudentsPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Student Management</h1>
           <p className="text-gray-500">Register students and generate physical QR ID cards.</p>
         </div>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium"
-        >
-          <Plus size={20} /> Register Student
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          {students.some((s) => !s.registrationNumber) && (
+            <button
+              onClick={backfillIds}
+              disabled={backfilling}
+              title="Assign student IDs to students registered before IDs existed"
+              className="border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium"
+            >
+              {backfilling ? <Loader2 className="animate-spin" size={18} /> : <IdCard size={18} />}
+              Assign missing IDs
+            </button>
+          )}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium"
+          >
+            <Plus size={20} /> Register Student
+          </button>
+        </div>
       </div>
+
+      {backfillError && (
+        <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-400">
+          <IdCard size={18} className="mt-0.5 shrink-0" />
+          <span>{backfillError}</span>
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
@@ -144,9 +184,11 @@ export default function StudentsPage() {
               <thead className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 font-medium">
                 <tr>
                   <th className="px-6 py-4">Name</th>
+                  <th className="px-6 py-4">Student ID</th>
                   <th className="px-6 py-4">Batch / Grade</th>
                   <th className="px-6 py-4">Guardian</th>
                   <th className="px-6 py-4">Phone</th>
+                  <th className="px-6 py-4">Outstanding</th>
                   <th className="px-6 py-4">QR Code</th>
                 </tr>
               </thead>
@@ -157,7 +199,15 @@ export default function StudentsPage() {
                     onClick={() => router.push(`/admin/students/${sys._id}`)}
                     className="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors text-gray-900 dark:text-gray-100 cursor-pointer"
                   >
-                    <td className="px-6 py-4 font-medium">{sys.name}</td>
+                    <td className="px-6 py-4">
+                      <div className="font-medium">{sys.name}</div>
+                      {sys.school && (
+                        <div className="text-xs text-gray-500">{sys.school}</div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 font-mono text-xs">
+                      {sys.registrationNumber ?? <span className="text-gray-400">not assigned</span>}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
                         <span className="font-bold text-gray-900 dark:text-gray-100">{sys.batchId?.name || 'No Batch'}</span>
@@ -166,6 +216,18 @@ export default function StudentsPage() {
                     </td>
                     <td className="px-6 py-4">{sys.guardianName}</td>
                     <td className="px-6 py-4">{sys.guardianPhone}</td>
+                    <td className="px-6 py-4">
+                      {sys.totalOwed > 0 ? (
+                        <span className="font-mono font-bold text-destructive">
+                          Rs. {sys.totalOwed}
+                          <span className="ml-1 text-xs font-normal text-gray-500">
+                            ({sys.unpaidCount})
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="text-emerald-600 font-medium">Settled</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4">
                       <button 
                         onClick={(e) => { e.stopPropagation(); showQrCode(sys); }}
@@ -177,7 +239,7 @@ export default function StudentsPage() {
                   </tr>
                 ))}
                 {students.length === 0 && (
-                  <tr><td colSpan={5} className="px-6 py-12 text-center text-gray-500">No students registered yet.</td></tr>
+                  <tr><td colSpan={7} className="px-6 py-12 text-center text-gray-500">No students registered yet.</td></tr>
                 )}
               </tbody>
             </table>
@@ -192,6 +254,7 @@ export default function StudentsPage() {
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Register New Student</h3>
             <form onSubmit={handleCreate} className="space-y-4">
               <div><label className="field-label">Full Name</label><input required className="field" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
+              <div><label className="field-label">School</label><input className="field" placeholder="e.g. Kallar Maha Vidyalayam" value={formData.school} onChange={e => setFormData({...formData, school: e.target.value})} /></div>
               <div><label className="field-label">Guardian Name</label><input required className="field" value={formData.guardianName} onChange={e => setFormData({...formData, guardianName: e.target.value})} /></div>
               <div><label className="field-label">Guardian Phone (SMS)</label><input required className="field" placeholder="e.g. +94771234567" value={formData.guardianPhone} onChange={e => setFormData({...formData, guardianPhone: e.target.value})} /></div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -248,30 +311,91 @@ export default function StudentsPage() {
             </div>
             
             {/* Standard CR-80 Financial Card Size (85.6mm x 53.98mm) */}
-            <div id="printable-id-card" className="w-[85.6mm] h-[53.98mm] bg-white border-[3px] border-teal-600 rounded-xl flex flex-row items-center p-4 gap-4 relative overflow-hidden shrink-0">
-              
-              {/* Decorative Geometric Background */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-8 translate-x-8"></div>
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-primary/5 rounded-full translate-y-8 -translate-x-4"></div>
-              
-              <div className="flex-1 flex flex-col justify-center z-10 w-full h-full relative">
-                <div className="flex items-center gap-2 mb-2">
-                  <Image src="/logo.png" width={32} height={32} className="w-8 h-8 object-contain" alt="Logo" />
-                  <div className="text-[10px] font-bold text-teal-900 leading-[1.1]">Lakshan Primary<br/>Education Center</div>
-                </div>
-                
-                <h4 className="font-bold text-gray-900 text-[13px] leading-tight uppercase mt-3 line-clamp-2">{activeStudent.name}</h4>
-                <p className="text-[10px] font-extrabold text-primary mt-1">{activeStudent.batchId?.name || 'Standard Batch'}</p>
-                
-                <div className="mt-auto text-[9px] text-gray-600 space-y-0.5">
-                  <p><span className="font-semibold">Grade:</span> {activeStudent.grade}</p>
-                  <p><span className="font-semibold">Parent:</span> {activeStudent.guardianPhone}</p>
-                </div>
-              </div>
+            <div
+              id="printable-id-card"
+              className="relative w-[85.6mm] h-[53.98mm] shrink-0 rounded-2xl p-[2.5px] overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 45%, #134e4a 100%)' }}
+            >
+              <div className="relative w-full h-full rounded-[15px] bg-white overflow-hidden">
 
-              <div className="w-24 shrink-0 flex flex-col items-center z-10">
-                <Image src={activeQr} alt="QR Code" width={96} height={96} unoptimized className="w-full h-auto bg-white border-2 border-gray-100 rounded-lg p-1 shadow-sm" />
-                <p className="text-[7px] text-gray-400 font-mono mt-1 tracking-tighter">{activeStudent.qrCode}</p>
+                {/* Decorative corner waves */}
+                <div
+                  className="absolute -top-16 -right-14 w-36 h-36 rotate-24"
+                  style={{ background: 'linear-gradient(135deg, #0f766e 0%, #134e4a 100%)', borderRadius: '38% 62% 55% 45% / 45% 40% 60% 55%' }}
+                />
+                <div
+                  className="absolute -top-16 right-10 w-14 h-32 rotate-16"
+                  style={{ background: 'linear-gradient(180deg, #5eead4 0%, #2dd4bf 100%)', opacity: 0.55, borderRadius: '50%' }}
+                />
+                <div
+                  className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full"
+                  style={{ background: '#0d9488', opacity: 0.16 }}
+                />
+                <div
+                  className="absolute -bottom-6 -left-6 w-16 h-16 rounded-full"
+                  style={{ background: '#2dd4bf', opacity: 0.4 }}
+                />
+
+                {/* Watermark logo */}
+                <Image
+                  src="/logo.png"
+                  alt=""
+                  width={140}
+                  height={140}
+                  unoptimized
+                  className="absolute top-1/2 left-[58%] -translate-x-1/2 -translate-y-1/2 w-32 h-32 object-contain opacity-[0.07]"
+                />
+
+                <div className="relative z-10 h-full flex flex-col p-3.5">
+                  <div className="flex items-center gap-2">
+                    <Image src="/logo.png" width={30} height={30} unoptimized className="w-[30px] h-[30px] object-contain shrink-0" alt="Logo" />
+                    <div className="w-px h-7 bg-teal-800/30 shrink-0" />
+                    <div className="text-[9px] font-bold text-teal-800 leading-[1.15]">Lakshan Primary<br/>Education Center</div>
+                  </div>
+
+                  <div className="flex-1 flex items-center gap-2 mt-2">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-extrabold text-slate-900 text-[15px] leading-tight uppercase truncate">{activeStudent.name}</h4>
+
+                      {activeStudent.registrationNumber && (
+                        <p className="text-[8px] font-mono font-bold text-teal-800 tracking-tight mt-0.5">
+                          {activeStudent.registrationNumber}
+                        </p>
+                      )}
+
+                      <div className="relative inline-block mt-2">
+                        <span
+                          className="block text-[8px] font-bold text-white px-2.5 py-1 pr-4"
+                          style={{ background: '#0f766e', clipPath: 'polygon(0 0, 100% 0, 88% 100%, 0% 100%)' }}
+                        >
+                          {activeStudent.batchId?.name || 'Standard Batch'}
+                        </span>
+                      </div>
+
+                      <div className="mt-2.5 space-y-1">
+                        <p className="text-[8px] text-slate-700">
+                          <span className="font-bold bg-teal-100 text-teal-800 rounded-full px-1.5 py-0.5 mr-1">Grade:</span>
+                          <span className="font-bold">{activeStudent.grade}</span>
+                        </p>
+                        <p className="text-[8px] text-slate-700">
+                          <span className="font-bold bg-teal-100 text-teal-800 rounded-full px-1.5 py-0.5 mr-1">Parent:</span>
+                          <span className="font-bold">{activeStudent.guardianPhone}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="shrink-0 flex flex-col items-center gap-1">
+                      <div className="bg-white border-2 rounded-lg p-1" style={{ borderColor: '#0d9488' }}>
+                        <Image src={activeQr} alt="QR Code" width={72} height={72} unoptimized className="w-[72px] h-[72px]" />
+                      </div>
+                      <p className="text-[6px] text-teal-700 font-mono tracking-tighter flex items-center gap-1">
+                        <span className="w-2 h-px bg-teal-600" />
+                        {activeStudent.qrCode}
+                        <span className="w-2 h-px bg-teal-600" />
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

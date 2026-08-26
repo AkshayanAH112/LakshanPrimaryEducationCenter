@@ -23,6 +23,13 @@ export async function GET() {
     const hasClassesToday = todaySessions.length > 0;
     let totalRosterSlots = 0;
     let presentRosterSlots = 0;
+    // Fees for today's sessions specifically — only students marked present owe
+    // anything, matching getOutstandingAttendance(). Drives the "Today's
+    // Payments" card, which links through to the per-student breakdown at
+    // /api/payments/today.
+    let todayCollected = 0;
+    let todayExpected = 0;
+    let todayPaidCount = 0;
 
     if (hasClassesToday) {
       const sessionIds = todaySessions.map((s) => s._id.toString());
@@ -40,7 +47,14 @@ export async function GET() {
           const record = todayAttendanceRecords.find(
             (a) => a.studentId.toString() === student._id.toString() && a.classId.toString() === session._id.toString()
           );
-          if (record?.present) presentRosterSlots++;
+          if (record?.present) {
+            presentRosterSlots++;
+            const due = session.paymentAmount || 0;
+            const paidAmount = record.paidAmount || 0;
+            todayExpected += due;
+            todayCollected += Math.min(paidAmount, due);
+            if (paidAmount >= due) todayPaidCount++;
+          }
         }
       }
     }
@@ -66,6 +80,10 @@ export async function GET() {
       todayAttendance: `${attendancePercent}%`,
       totalPendingAmount,
       todayPendingAmount,
+      todayCollected,
+      todayExpected,
+      todayPaidCount,
+      todayPresentCount: presentRosterSlots,
       recentMarks,
     });
   } catch (error: any) {

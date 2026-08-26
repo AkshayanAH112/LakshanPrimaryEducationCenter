@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import { Attendance } from '@/models';
 import { sendSMS } from '@/lib/sms';
+import { sendWhatsApp } from '@/lib/whatsapp';
 
 export async function GET(request: Request) {
   // Security check for Vercel Cron
@@ -30,21 +31,26 @@ export async function GET(request: Request) {
     }
 
     const TARGET_DAYS = [3, 5, 10, 15];
+    let whatsappSent = 0;
     let smsSent = 0;
 
     for (const sId in studentCounts) {
       const data = studentCounts[sId];
-      if (TARGET_DAYS.includes(data.count)) {
-        if (data.student.guardianPhone) {
-          const suffix = data.count === 15 ? "URGENT: " : (data.count >= 10 ? "CRITICAL: " : "");
-          const msg = `Lakshan Primary: ${suffix}Friendly reminder that ${data.student.name} currently has ${data.count} unpaid class sessions. Please settle the dues at the center.`;
-          await sendSMS(data.student.guardianPhone, msg);
+      if (TARGET_DAYS.includes(data.count) && data.student.guardianPhone) {
+        const urgency = data.count === 15 ? "CRITICAL: " : (data.count >= 10 ? "URGENT: " : "");
+        const msg = `Lakshan Primary: ${urgency}Friendly reminder that ${data.student.name} currently has ${data.count} unpaid class sessions. Please settle the dues at the center.`;
+
+        // WhatsApp first (far cheaper per message) — falls back to SMS if the
+        // API key isn't configured yet, or the send itself fails.
+        if (await sendWhatsApp(data.student.guardianPhone, msg)) {
+          whatsappSent++;
+        } else if (await sendSMS(data.student.guardianPhone, msg)) {
           smsSent++;
         }
       }
     }
 
-    return NextResponse.json({ success: true, processedStudents: Object.keys(studentCounts).length, smsSent });
+    return NextResponse.json({ success: true, processedStudents: Object.keys(studentCounts).length, whatsappSent, smsSent });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -11,7 +11,14 @@ export default function BatchesPage() {
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   
-  const [batchForm, setBatchForm] = useState({ name: "", year: new Date().getFullYear(), grades: [3, 4, 5] });
+  const [batchForm, setBatchForm] = useState({
+    name: "",
+    year: new Date().getFullYear(),
+    // The year the batch is NAMED for (the scholarship year), which is what
+    // student IDs are sequenced under — not the year the cohort starts.
+    batchYear: new Date().getFullYear() + 2,
+    grades: [3, 4, 5],
+  });
   const [classForm, setClassForm] = useState({ batchId: "", grade: "3", date: "", time: "", subject: "", paymentAmount: 500 });
   const router = useRouter();
 
@@ -91,13 +98,25 @@ export default function BatchesPage() {
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-sm">
           <h3 className="text-lg font-bold mb-4 dark:text-white">Recent Daily Sessions</h3>
           <div className="space-y-4">
+            {classes.length === 0 && (
+              <div className="p-8 border border-dashed border-gray-200 dark:border-gray-800 rounded-xl text-center text-gray-400">
+                No class sessions scheduled yet.
+              </div>
+            )}
             {classes.map(v => (
-              <div key={v._id} className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 flex items-center justify-between">
-                <div>
-                  <div className="font-bold dark:text-white">Grade {v.grade} - {v.subject || 'General'}</div>
-                  <div className="text-sm text-gray-500 flex items-center gap-1 mt-1"><Calendar size={14}/> {new Date(v.date).toLocaleDateString()} at {v.time}</div>
+              <div
+                key={v._id}
+                onClick={() => router.push(`/admin/classes/${v._id}`)}
+                className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary cursor-pointer transition-colors flex items-center justify-between gap-3 group"
+              >
+                <div className="min-w-0">
+                  <div className="font-bold dark:text-white truncate">Grade {v.grade} - {v.subject || 'General'}</div>
+                  <div className="text-sm text-gray-500 flex items-center gap-1 mt-1"><Calendar size={14}/> {new Date(v.date).toLocaleDateString()}{v.time ? ` at ${v.time}` : ''}</div>
                 </div>
-                <div className="text-primary font-bold bg-primary/10 dark:bg-primary/15 px-3 py-1 rounded-lg">Rs. {v.paymentAmount}</div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <span className="text-primary font-bold bg-primary/10 dark:bg-primary/15 px-3 py-1 rounded-lg">Rs. {v.paymentAmount}</span>
+                  <ChevronRight className="text-gray-400 group-hover:text-primary transition-colors" size={20} />
+                </div>
               </div>
             ))}
           </div>
@@ -114,10 +133,20 @@ export default function BatchesPage() {
                 <label className="field-label">Batch Name</label>
                 <input required className="field" placeholder="e.g. 2025 Scholarship Batch" onChange={e => setBatchForm({...batchForm, name: e.target.value})} />
               </div>
-              <div>
-                <label className="field-label">Starting Year</label>
-                <input type="number" required className="field" placeholder="Year" value={batchForm.year} onChange={e => setBatchForm({...batchForm, year: Number(e.target.value)})} />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="field-label">Starting Year</label>
+                  <input type="number" required className="field" placeholder="Year" value={batchForm.year} onChange={e => setBatchForm({...batchForm, year: Number(e.target.value)})} />
+                </div>
+                <div>
+                  <label className="field-label">Batch Year</label>
+                  <input type="number" required className="field" placeholder="e.g. 2028" value={batchForm.batchYear} onChange={e => setBatchForm({...batchForm, batchYear: Number(e.target.value)})} />
+                </div>
               </div>
+              <p className="-mt-1 text-xs text-gray-500">
+                Batch year is the year the batch is named for (2028 for a &ldquo;2028 Scholarship Batch&rdquo;).
+                Student IDs are numbered under it — <span className="font-mono">LPEC/{batchForm.batchYear || "····"}/0001</span>.
+              </p>
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setIsBatchModalOpen(false)} className="flex-1 py-2 border border-border bg-card rounded-xl font-medium text-foreground hover:bg-muted transition-colors">Cancel</button>
                 <button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-xl font-medium">Create</button>

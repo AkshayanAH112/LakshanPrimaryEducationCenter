@@ -10,6 +10,9 @@ import {
   QrCode,
   CreditCard,
   GraduationCap,
+  ClipboardList,
+  FileSpreadsheet,
+  LineChart,
   LogOut,
 } from "lucide-react";
 
@@ -33,7 +36,10 @@ const navItems = [
   { title: "Batches & Classes", url: "/admin/batches", icon: BookOpen },
   { title: "Scanner & Attendance", url: "/admin/scanner", icon: QrCode },
   { title: "Payments", url: "/admin/payments", icon: CreditCard },
+  { title: "Exams", url: "/admin/exams", icon: ClipboardList },
   { title: "Marks & Reports", url: "/admin/marks", icon: GraduationCap },
+  { title: "Attendance Report", url: "/admin/attendance", icon: FileSpreadsheet },
+  { title: "Analysis", url: "/admin/analysis", icon: LineChart },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -42,7 +48,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
+    // replace (not push) so Back doesn't land on an admin page, and refresh()
+    // to drop the App Router cache — without it a already-rendered admin page
+    // can still be served from memory after the cookie is gone.
+    router.replace("/login");
+    router.refresh();
   };
 
   return (
